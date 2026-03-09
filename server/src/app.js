@@ -14,7 +14,8 @@ app.use(cookieParser());
 
 const allowedOrigins = [
     "http://localhost:5173",
-    "https://task-manager-phi-five-12.vercel.app"
+    "https://task-manager-phi-five-12.vercel.app",
+    "https://task-manager-sand-seven-10.vercel.app",
 ]
 app.use(cors({
     origin: allowedOrigins,
@@ -22,7 +23,6 @@ app.use(cors({
 }))
 
 app.use(morgan("dev"))
-
 
 app.use('/task', postRouter)
 app.use('/auth', authRouter)
