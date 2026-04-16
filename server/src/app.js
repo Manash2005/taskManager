@@ -28,5 +28,15 @@ app.use(morgan("dev"))
 app.use('/task', postRouter)
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
+app.get("/ping", (req, res) => {
+  res.send("OK");
+});
 
+app.get("/health", (req, res) => {
+  res.json({
+    status: "OK",
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+  });
+});
 module.exports = app;
