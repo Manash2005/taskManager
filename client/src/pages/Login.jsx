@@ -11,8 +11,7 @@ const Login = () => {
 
   const handleGoogleLogin = () => {
     // Redirect to backend Google OAuth endpoint
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-    window.location.href = `${backendUrl}/auth/oauth/google`;
+    window.location.href = 'https://taskmanager-ti21.onrender.com/auth/oauth/google';
   };
 
   const handleChange = (e) => {
