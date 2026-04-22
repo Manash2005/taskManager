@@ -15,6 +15,11 @@ const Login = () => {
     window.location.href = `${backendUrl}/auth/oauth/google`;
   };
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
