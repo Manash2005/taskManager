@@ -9,9 +9,10 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError('');
+  const handleGoogleLogin = () => {
+    // Redirect to backend Google OAuth endpoint
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+    window.location.href = `${backendUrl}/auth/oauth/google`;
   };
 
   const handleSubmit = async (e) => {
@@ -248,6 +249,54 @@ const Login = () => {
               ) : 'Sign In'}
             </button>
           </form>
+
+          {/* Divider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', margin: '28px 0' }}>
+            <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }} />
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', fontWeight: 500 }}>OR</span>
+            <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }} />
+          </div>
+
+          {/* Google Sign In Button */}
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="btn"
+            style={{
+              width: '100%',
+              padding: '12px',
+              fontSize: '0.9rem',
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--border-color)',
+              background: 'white',
+              color: '#333',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              cursor: 'pointer',
+              transition: 'all var(--transition-fast)',
+              marginBottom: '20px',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#f9f9f9';
+              e.currentTarget.style.borderColor = '#d0d0d0';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'white';
+              e.currentTarget.style.borderColor = 'var(--border-color)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <text x="0" y="16" fontSize="14" fontWeight="bold" fill="#EA4335">
+                G
+              </text>
+            </svg>
+            Continue with Google
+          </button>
 
           {/* Divider */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', margin: '28px 0' }}>

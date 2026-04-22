@@ -30,7 +30,19 @@ const userSchema = mongoose.Schema({
 
     password: {
         type: String,
-        required: true
+        required: false // Optional for OAuth users
+    },
+
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true // Allows null values but keeps uniqueness
+    },
+
+    authProvider: {
+        type: String,
+        enum: ['local', 'google'],
+        default: 'local'
     }
 
 }, { timestamps: true })
