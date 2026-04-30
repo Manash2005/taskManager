@@ -8,6 +8,8 @@ import AddTaskModal from '../components/AddTaskModal';
 import EditTaskModal from '../components/EditTaskModal';
 import KanbanBoard from '../components/KanbanBoard';
 import ProfilePanel from '../components/ProfilePanel';
+import FriendsPanel from '../components/FriendsPanel';
+import FriendTasksView from '../components/FriendTasksView';
 import { useToast } from '../components/Toast';
 
 const Dashboard = () => {
@@ -23,6 +25,9 @@ const Dashboard = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [sort, setSort] = useState({ sortBy: 'createdAt', order: 'desc' });
     const [viewMode, setViewMode] = useState('grid');
+    const [showFriends, setShowFriends] = useState(false);
+    const [viewingFriendTasks, setViewingFriendTasks] = useState(null);
+    const [pendingRequests, setPendingRequests] = useState(0);
     const searchRef = useRef(null);
 
     const fetchData = useCallback(async () => {
@@ -44,9 +49,19 @@ const Dashboard = () => {
         }
     }, [navigate, sort]);
 
+    const fetchPendingCount = useCallback(async () => {
+        try {
+            const res = await api.get('/friends/pending');
+            setPendingRequests((res.data.requests || []).length);
+        } catch (err) {
+            // silent fail
+        }
+    }, []);
+
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        fetchPendingCount();
+    }, [fetchData, fetchPendingCount]);
 
     // Keyboard shortcuts
     useEffect(() => {
@@ -58,14 +73,16 @@ const Dashboard = () => {
             }
             // Escape → close modals
             if (e.key === 'Escape') {
-                if (showAddModal) setShowAddModal(false);
-                if (showProfile) setShowProfile(false);
-                if (editingTask) setEditingTask(null);
+                if (viewingFriendTasks) setViewingFriendTasks(null);
+                else if (showFriends) { setShowFriends(false); fetchPendingCount(); }
+                else if (showAddModal) setShowAddModal(false);
+                else if (showProfile) setShowProfile(false);
+                else if (editingTask) setEditingTask(null);
             }
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [showAddModal, showProfile, editingTask]);
+    }, [showAddModal, showProfile, editingTask, showFriends, viewingFriendTasks, fetchPendingCount]);
 
     // Filtered & searched tasks
     const filteredTasks = tasks.filter((t) => {
@@ -163,7 +180,7 @@ const Dashboard = () => {
     }
 
     return (
-        <DashboardLayout user={user} onProfileOpen={() => setShowProfile(true)} taskCount={stats.total}>
+        <DashboardLayout user={user} onProfileOpen={() => setShowProfile(true)} taskCount={stats.total} onFriendsOpen={() => setShowFriends(true)} pendingRequests={pendingRequests}>
             {/* Progress bar */}
             {stats.total > 0 && (
                 <div
@@ -432,6 +449,16 @@ const Dashboard = () => {
             <AddTaskModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} onAdd={handleAddTask} />
             <EditTaskModal isOpen={!!editingTask} onClose={() => setEditingTask(null)} task={editingTask} onSave={handleEditTask} />
             <ProfilePanel isOpen={showProfile} onClose={() => setShowProfile(false)} user={user} onUserUpdate={(u) => setUser(u)} stats={stats} />
+            <FriendsPanel
+                isOpen={showFriends}
+                onClose={() => { setShowFriends(false); fetchPendingCount(); }}
+                onViewTasks={(friend) => { setShowFriends(false); setViewingFriendTasks(friend); }}
+            />
+            <FriendTasksView
+                isOpen={!!viewingFriendTasks}
+                onClose={() => setViewingFriendTasks(null)}
+                friend={viewingFriendTasks}
+            />
 
             {/* Responsive CSS */}
             <style>{`

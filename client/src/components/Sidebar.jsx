@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../api/axios';
 
-const Sidebar = ({ user, onClose, isOpen, taskCount }) => {
+const Sidebar = ({ user, onClose, isOpen, taskCount, onFriendsOpen, pendingRequests = 0 }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [loggingOut, setLoggingOut] = useState(false);
@@ -190,6 +190,65 @@ const Sidebar = ({ user, onClose, isOpen, taskCount }) => {
                             </button>
                         );
                     })}
+
+                    {/* Friends button */}
+                    <button
+                        onClick={() => {
+                            onFriendsOpen?.();
+                            onClose?.();
+                        }}
+                        style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '11px 14px',
+                            borderRadius: 'var(--radius-sm)',
+                            border: 'none',
+                            background: 'transparent',
+                            color: 'var(--text-secondary)',
+                            cursor: 'pointer',
+                            fontSize: '0.875rem',
+                            fontWeight: 500,
+                            fontFamily: 'inherit',
+                            transition: 'all var(--transition-fast)',
+                            textAlign: 'left',
+                            marginBottom: '4px',
+                            position: 'relative',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(148, 163, 184, 0.06)';
+                            e.currentTarget.style.color = 'var(--text-primary)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'transparent';
+                            e.currentTarget.style.color = 'var(--text-secondary)';
+                        }}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <span style={{ flex: 1 }}>Friends</span>
+                        {pendingRequests > 0 && (
+                            <span style={{
+                                fontSize: '0.65rem',
+                                fontWeight: 700,
+                                color: 'white',
+                                background: 'linear-gradient(135deg, #f87171, #ef4444)',
+                                padding: '2px 7px',
+                                borderRadius: 'var(--radius-full)',
+                                minWidth: '20px',
+                                textAlign: 'center',
+                                boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)',
+                                animation: 'pulse-glow 2s infinite',
+                            }}>
+                                {pendingRequests}
+                            </span>
+                        )}
+                    </button>
                 </nav>
 
                 {/* User section */}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Sidebar from './Sidebar';
 
-const DashboardLayout = ({ user, children, onProfileOpen, taskCount }) => {
+const DashboardLayout = ({ user, children, onProfileOpen, taskCount, onFriendsOpen, pendingRequests }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const getGreeting = () => {
@@ -18,6 +18,8 @@ const DashboardLayout = ({ user, children, onProfileOpen, taskCount }) => {
                 isOpen={sidebarOpen}
                 onClose={() => setSidebarOpen(false)}
                 taskCount={taskCount}
+                onFriendsOpen={onFriendsOpen}
+                pendingRequests={pendingRequests}
             />
 
             {/* Main content */}

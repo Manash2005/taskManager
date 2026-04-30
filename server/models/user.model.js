@@ -43,8 +43,28 @@ const userSchema = mongoose.Schema({
         type: String,
         enum: ['local', 'google'],
         default: 'local'
-    }
+    },
 
+    followers: [
+        { 
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User" 
+        }
+    ],
+    following: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User" 
+            }
+        ],
+
+    friends: [
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: "User" 
+        }
+    ]
+    
 }, { timestamps: true })
 
 const userModel = mongoose.model("user", userSchema)

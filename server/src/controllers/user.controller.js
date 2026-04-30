@@ -178,4 +178,31 @@ async function updatePassword(req, res) {
     }
 }
 
-module.exports = { uploadPfp, phone, getuserDetails, updateName, changeEmail, updatePassword };
+async function searchUsers(req, res) {
+    try {
+        const query = req.query.q;
+        if (!query) {
+            return res.status(400).json({
+                message: "Search query is required"
+            });
+        }
+
+        const users = await userModel.find({
+            name: { $regex: query, $options: 'i' },
+            _id: { $ne: req.user.id }
+        }).select("-password");
+        
+        return res.status(200).json({
+            message: "Users fetched successfully",
+            users
+        });
+    } catch (error) {
+        console.log("User search failed.\n", error);
+        return res.status(500).json({
+            message: "User search failed",
+            error
+        });
+    }
+}
+
+module.exports = { uploadPfp, phone, getuserDetails, updateName, changeEmail, updatePassword, searchUsers };

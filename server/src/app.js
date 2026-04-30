@@ -6,6 +6,7 @@ const postRouter = require("./routes/task.routes")
 const authRouter = require("./routes/auth.routes")
 const userRouter = require("./routes/user.routes")
 const oauthRoutes = require("./routes/oauth.routes")
+const friendsRouter = require("./routes/friends.routes")
 const morgan = require("morgan")
 const cors = require("cors")
 const app = express();
@@ -47,6 +48,7 @@ app.use(morgan("dev"))
 app.use('/task', postRouter)
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
+app.use('/friends', friendsRouter)
 app.use('/auth/oauth', oauthRoutes)
 app.get("/ping", (req, res) => {
   res.send("OK");
